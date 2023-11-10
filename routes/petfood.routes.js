@@ -16,7 +16,17 @@ router.put(
   petFoodController.uploadPetFoodImageController
 );
 
+//update pet food
+router.put("/:food_id", petFoodController.updatePetFoodController)
+
+//delete pet food
+router.delete("/delete/:food_id", petFoodController.deletePetfoodController)
+
+//get image only
 router.get('/get-image/:food_id', petFoodController.getFoodImageByIdController)
+
+//get data by Id
+router.get('/:food_id', petFoodController.getPetFoodByIdController)
 
 module.exports = router;
 
