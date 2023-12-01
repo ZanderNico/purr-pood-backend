@@ -14,12 +14,12 @@ router.get('/', verifyToken, checkAdminRole, userController.getAllUsersControlle
 router.post('/login', userController.loginUserController)
 
 //get user by id 
-router.get('/:user_id', userController.getUserByIdController)
+router.get('/:user_id', verifyToken, userController.getUserByIdController)
 
 //update user by id
-router.put('/update-users/:user_id', userController.updateUserController)
+router.put('/update-users/:user_id', verifyToken, userController.updateUserController)
 
 //delete user by id
-router.delete('/delete-users/:user_id', userController.deleteUserController)
+router.delete('/delete-users/:user_id', verifyToken, checkAdminRole, userController.deleteUserController)
 
 module.exports = router;

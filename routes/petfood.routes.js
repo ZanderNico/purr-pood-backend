@@ -2,9 +2,14 @@ const express = require("express");
 const router = express.Router();
 const petFoodController = require("../controllers/petfood.controller");
 const upload = require("../config/multerConfig");
+const checkAdminRole = require("../middlewares/adminRole");
 
 //add petfood
-router.post("/create-petfood", petFoodController.createPetfoodController);
+router.post(
+  "/create-petfood",
+  checkAdminRole,
+  petFoodController.createPetfoodController
+);
 
 //get petfoods
 router.get("/", petFoodController.getAllPetFoodController);
@@ -13,20 +18,24 @@ router.get("/", petFoodController.getAllPetFoodController);
 router.put(
   "/upload-image/:food_id",
   upload.single("food_image"),
+  checkAdminRole,
   petFoodController.uploadPetFoodImageController
 );
 
 //update pet food
-router.put("/:food_id", petFoodController.updatePetFoodController)
+router.put("/:food_id", checkAdminRole, petFoodController.updatePetFoodController);
 
 //delete pet food
-router.delete("/delete/:food_id", petFoodController.deletePetfoodController)
+router.delete(
+  "/delete/:food_id",
+  checkAdminRole,
+  petFoodController.deletePetfoodController
+);
 
 //get image only
-router.get('/get-image/:food_id', petFoodController.getFoodImageByIdController)
+router.get("/get-image/:food_id", petFoodController.getFoodImageByIdController);
 
 //get data by Id
-router.get('/:food_id', petFoodController.getPetFoodByIdController)
+router.get("/:food_id", petFoodController.getPetFoodByIdController);
 
 module.exports = router;
-
