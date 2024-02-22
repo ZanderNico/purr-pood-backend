@@ -54,7 +54,9 @@ const loginUserService = async (email, password) => {
     //get the data in the User's table row 1 (as object to)
     const user = userRows[0];
     // Generate a JWT token
-    const token = jwt.sign({ user: user }, jwtSecret, { expiresIn: jwtExpiration });
+    const token = jwt.sign({ user: user }, jwtSecret, {
+      expiresIn: jwtExpiration,
+    });
     return token; // Return the JWT token
   } catch (error) {
     throw error;
@@ -84,10 +86,9 @@ const getUserByIdService = async (userId) => {
       .query("SELECT * FROM purrpooddb.Users WHERE user_id = ?", [userId]);
 
     if (results.length === 1) {
-
-    // Remove the 'password' property from each user object
-    const usersWithoutPassword = results.map(({ password, ...user }) => user);
-    return usersWithoutPassword;
+      // Remove the 'password' property from each user object
+      const usersWithoutPassword = results.map(({ password, ...user }) => user);
+      return usersWithoutPassword;
     } else {
       throw new Error("User not found");
     }
@@ -99,9 +100,23 @@ const getUserByIdService = async (userId) => {
 // Update a user by ID
 const updateUserService = async (userId, newData) => {
   try {
+    // Check if the newData object contains a password
+    if (newData.password) {
+      // Ensure the new password meets the requirements
+      if (!/^(?=.*\d).{6,}$/.test(newData.password)) {
+        throw new Error(
+          "New password must have at least one number, and be at least 6 characters long"
+        );
+      }
+      // Hash the new password
+      newData.password = await bcrypt.hash(newData.password, 10);
+    }
     const [results] = await db
       .promise()
-      .query("UPDATE purrpooddb.Users SET ? WHERE user_id = ?", [newData, userId]);
+      .query("UPDATE purrpooddb.Users SET ? WHERE user_id = ?", [
+        newData,
+        userId,
+      ]);
 
     if (results.affectedRows > 0) {
       return true; // Returns true if the user was updated
