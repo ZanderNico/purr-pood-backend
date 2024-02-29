@@ -3,7 +3,13 @@ const fs = require('fs-extra');
 const path = require('path');
 
 const createPetfoodService = async (food_name, food_description, category, price, stock_quantity) => {
-    const values = [food_name, food_description, category, price, stock_quantity]
+  
+  //make sure it fields are not empty
+  if (!food_name || !food_description || !category || !price || !stock_quantity) {
+    throw new Error("All fields must be filled");
+}
+
+const values = [food_name, food_description, category, price, stock_quantity];
     try {
         const [results] = await db
           .promise()

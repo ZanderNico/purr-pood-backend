@@ -3,10 +3,11 @@ const router = express.Router();
 const petFoodController = require("../controllers/petfood.controller");
 const upload = require("../config/multerConfig");
 const checkAdminRole = require("../middlewares/adminRole");
+const verifyToken = require("../middlewares/auth");
 
 //add petfood
 router.post(
-  "/create-petfood",
+  "/create-petfood", verifyToken,
   checkAdminRole,
   petFoodController.createPetfoodController
 );
