@@ -1,9 +1,9 @@
 const cartsService = require("../services/carts.services");
 
-const createCartsController = async (req, res) => {
+const createCarts = async (req, res) => {
   try {
     const { customer_id, food_id, quantity } = req.body;
-    const cartId = await cartsService.createCartsService(
+    const cartId = await cartsService.createCarts(
       customer_id,
       food_id,
       quantity
@@ -17,12 +17,12 @@ const createCartsController = async (req, res) => {
   }
 };
 
-const updateCartsQuantityController = async (req, res) => {
+const updateCartsQuantity = async (req, res) => {
   const { quantity } = req.body; 
   const { cart_id } = req.params;
 
   try {
-    const result = await cartsService.updateCartsQuantityService(quantity, cart_id);
+    const result = await cartsService.updateCartsQuantity(quantity, cart_id);
     res.json({ success: true, message: 'Cart updated successfully' });
   } catch (error) {
     console.error('Error updating cart:', error.message);
@@ -30,9 +30,9 @@ const updateCartsQuantityController = async (req, res) => {
   }
 }
 
-const getCartWithPetFoodController = async (req, res) => {
+const getCartWithPetFood = async (req, res) => {
   try {
-    const carts = await cartsService.getCartsWithPetFoodService();
+    const carts = await cartsService.getCartsWithPetFood();
     return res.status(200).json(carts);
   } catch (error) {
     console.error(error);
@@ -40,9 +40,9 @@ const getCartWithPetFoodController = async (req, res) => {
   }
 };
 
-const getUsersWithCartsAndPetFoodController = async (req, res) => {
+const getUsersWithCartsAndPetFood = async (req, res) => {
   try {
-    const carts = await cartsService.getUsersWithCartsAndPetFoodService();
+    const carts = await cartsService.getUsersWithCartsAndPetFood();
     res.json({ success: true, data: carts });
   } catch (error) {
     console.error("Error getting users with carts:", error.message);
@@ -50,11 +50,11 @@ const getUsersWithCartsAndPetFoodController = async (req, res) => {
   }
 };
 
-const deleteCartController = async (req, res) => {
+const deleteCart = async (req, res) => {
   const { cart_id } = req.params;
 
   try {
-    const result = await cartsService.deleteCartService(cart_id)
+    const result = await cartsService.deleteCart(cart_id)
     res.json({ success: true, message: 'Cart deleted successfully' });
   } catch (error) {
     console.error('Error deleting cart:', error.message);
@@ -63,9 +63,9 @@ const deleteCartController = async (req, res) => {
 }
 
 module.exports = {
-  createCartsController,
-  updateCartsQuantityController,
-  getCartWithPetFoodController,
-  getUsersWithCartsAndPetFoodController,
-  deleteCartController
+  createCarts,
+  updateCartsQuantity,
+  getCartWithPetFood,
+  getUsersWithCartsAndPetFood,
+  deleteCart
 };

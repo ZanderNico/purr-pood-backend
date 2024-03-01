@@ -2,20 +2,30 @@ const petFoodService = require("../services/petfood.services.js");
 const path = require('path')
 
 
-const createPetfoodController = async (req, res) => {
+const createPetfood = async (req, res) => {
   try {
     const { food_name, food_description, category, price, stock_quantity } =
       req.body;
-    const petfoodId = await petFoodService.createPetfoodService(
-      food_name,
-      food_description,
-      category,
-      price,
-      stock_quantity
-    );
+      const { insertId, affectedRows } = await petFoodService.createPetfood(
+        food_name,
+        food_description,
+        category,
+        price,
+        stock_quantity
+      );
+  
+      if (affectedRows !== 1) {
+        return res.status(500).json({ error: "Failed to create petfood" });
+      }
+  
+      const petfoodId = insertId;
+
+      console.log("createeddd", petfoodId)
     return res.status(201).json({
       message: "Petfood created successfully",
       input: { food_name, food_description, category, price, stock_quantity },
+      food_id: petfoodId
+
     });
   } catch (error) {
     console.error(error);
@@ -23,9 +33,9 @@ const createPetfoodController = async (req, res) => {
   }
 };
 
-const getAllPetFoodController = async (req, res) => {
+const getAllPetFood = async (req, res) => {
   try{
-    const petfoods = await petFoodService.getAllPetFoodService()
+    const petfoods = await petFoodService.getAllPetFood()
     return res.status(200).json(petfoods);
   } catch(error){
     console.error(error);
@@ -33,11 +43,11 @@ const getAllPetFoodController = async (req, res) => {
   }
 }
 
-const updatePetFoodController = async (req, res) => {
+const updatePetFood = async (req, res) => {
   try {
     const foodId = req.params.food_id;
     const newData = req.body;
-    const updatedData = await petFoodService.updatePetFoodService(newData,foodId);
+    const updatedData = await petFoodService.updatePetFood(newData,foodId);
     if (updatedData) {
       res.status(200).json({ message: "Pet food updated successfully" });
     } else {
@@ -49,10 +59,10 @@ const updatePetFoodController = async (req, res) => {
   }
 }
 
-const deletePetfoodController = async (req, res) => {
+const deletePetfood = async (req, res) => {
   try {
     const foodId = req.params.food_id;
-    const isDeleted = await petFoodService.deletePetFoodService(foodId);
+    const isDeleted = await petFoodService.deletePetFood(foodId);
 
     if (isDeleted) {
       return res.status(200).json({ message: "Petfood and image deleted successfully" });
@@ -65,10 +75,10 @@ const deletePetfoodController = async (req, res) => {
   }
 };
 
-const getPetFoodByIdController = async (req, res) => {
+const getPetFoodById = async (req, res) => {
   try{
     const foodId = req.params.food_id;
-    const petFoodData = await petFoodService.getPetFoodByIdService(foodId)
+    const petFoodData = await petFoodService.getPetFoodById(foodId)
     res.status(200).json(petFoodData);
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve petfood" });
@@ -76,14 +86,14 @@ const getPetFoodByIdController = async (req, res) => {
 }
 
 
-//Food Image Controllers here ->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//Food Image controllers here ->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-const uploadPetFoodImageController = async (req, res) => {
+const uploadPetFoodImage = async (req, res) => {
   try{
     const foodId = req.params.food_id;
     const image = req.file.filename;
-    const petFoodImage = await petFoodService.uploadPetFoodImageService(image, foodId);
+    const petFoodImage = await petFoodService.uploadPetFoodImage(image, foodId);
     res.status(200).send(petFoodImage);
   } catch (error) {
     console.error(error);
@@ -91,10 +101,10 @@ const uploadPetFoodImageController = async (req, res) => {
   }
 }
 
-const getFoodImageByIdController = async (req, res) => {
+const getFoodImageById = async (req, res) => {
   try {
     const foodId = req.params.food_id;
-    const imageName = await petFoodService.getFoodImageByIdService(foodId)
+    const imageName = await petFoodService.getFoodImageById(foodId)
     
     if (!imageName) {
       res.status(404).send('Image not found.');
@@ -115,11 +125,11 @@ const getFoodImageByIdController = async (req, res) => {
 
 
 module.exports = {
-    createPetfoodController,
-    getAllPetFoodController,
-    updatePetFoodController,
-    getPetFoodByIdController,
-    uploadPetFoodImageController,
-    getFoodImageByIdController,
-    deletePetfoodController
+    createPetfood,
+    getAllPetFood,
+    updatePetFood,
+    getPetFoodById,
+    uploadPetFoodImage,
+    getFoodImageById,
+    deletePetfood
 }

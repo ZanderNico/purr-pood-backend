@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const { jwtSecret, jwtExpiration } = require("../config/jwt");
 
 // Create a new user
-const createUserService = async (password, email, user_name, user_role) => {
+const createUser = async (password, email, user_name, user_role) => {
   // Ensure the password meets the requirements
   if (!/^(?=.*\d).{6,}$/.test(password)) {
     throw new Error(
@@ -29,7 +29,7 @@ const createUserService = async (password, email, user_name, user_role) => {
 };
 
 //login
-const loginUserService = async (email, password) => {
+const loginUser = async (email, password) => {
   try {
     // Retrieve the user's record from the database based on the provided email
     const [userRows] = await db
@@ -64,7 +64,7 @@ const loginUserService = async (email, password) => {
 };
 
 // Fetch all users
-const getAllUsersService = async () => {
+const getAllUsers = async () => {
   try {
     const [results] = await db
       .promise()
@@ -79,7 +79,7 @@ const getAllUsersService = async () => {
 };
 
 // Retrieve a user by ID
-const getUserByIdService = async (userId) => {
+const getUserById = async (userId) => {
   try {
     const [results] = await db
       .promise()
@@ -98,7 +98,7 @@ const getUserByIdService = async (userId) => {
 };
 
 // Update a user by ID
-const updateUserService = async (userId, newData) => {
+const updateUser = async (userId, newData) => {
   try {
     // Check if the newData object contains a password
     if (newData.password) {
@@ -129,7 +129,7 @@ const updateUserService = async (userId, newData) => {
 };
 
 // Delete a user by ID
-const deleteUserService = async (userId) => {
+const deleteUser = async (userId) => {
   try {
     const [results] = await db
       .promise()
@@ -146,7 +146,7 @@ const deleteUserService = async (userId) => {
 };
 
 // Authenticate a user by username and password and generate a JWT token
-// const authenticateUserService = async (username, password) => {
+// const authenticateUser = async (username, password) => {
 //   try {
 //     const [results, fields] = await db
 //       .promise()
@@ -174,11 +174,11 @@ const deleteUserService = async (userId) => {
 // };
 
 module.exports = {
-  loginUserService,
-  createUserService,
-  getAllUsersService,
-  getUserByIdService,
-  updateUserService,
-  deleteUserService,
-  // authenticateUserService,
+  loginUser,
+  createUser,
+  getAllUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
+  // authenticateUser,
 };

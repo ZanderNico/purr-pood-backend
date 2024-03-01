@@ -1,6 +1,6 @@
 const db = require("../db/db");
 
-const createCartsService = async (customer_id, food_id, quantity) => {
+const createCarts = async (customer_id, food_id, quantity) => {
   // Check if the requested quantity is greater than 0
   if (quantity <= 0) {
     throw new Error("Invalid quantity");
@@ -52,7 +52,7 @@ const createCartsService = async (customer_id, food_id, quantity) => {
   }
 };
 
-const updateCartsQuantityService = async (updatedCarts, cart_id) => {
+const updateCartsQuantity = async (updatedCarts, cart_id) => {
   const getFoodIdContent = "SELECT stock_quantity FROM purrpooddb.PetFood WHERE food_id = ?";
   const getFoodIdQuery = "SELECT food_id, quantity FROM purrpooddb.Carts WHERE cart_id = ?";
   const updateCartsQuery = "UPDATE purrpooddb.Carts SET quantity = ? WHERE cart_id = ?";
@@ -87,7 +87,7 @@ const updateCartsQuantityService = async (updatedCarts, cart_id) => {
   }
 };
 
-const getCartsWithPetFoodService = async () => {
+const getCartsWithPetFood = async () => {
   const getCarts =
     "SELECT * FROM purrpooddb.Carts INNER JOIN purrpooddb.Petfood ON Carts.food_id = Petfood.food_id";
   try {
@@ -99,7 +99,7 @@ const getCartsWithPetFoodService = async () => {
   }
 };
 
-const getUsersWithCartsAndPetFoodService = async () => {
+const getUsersWithCartsAndPetFood = async () => {
   const getUsersWithCarts =
     "SELECT Users.user_id, Users.user_name, Users.email, Users.user_role, Carts.cart_id, Carts.quantity, Petfood.food_id, Petfood.food_name, Petfood.food_description, Petfood.category, Petfood.price, Petfood.stock_quantity, food_image " +
     "FROM purrpooddb.Users " +
@@ -160,7 +160,7 @@ const getUsersWithCartsAndPetFoodService = async () => {
   }
 };
 
-const deleteCartService = async (cart_id) => {
+const deleteCart = async (cart_id) => {
   // Get the cart information before deletion
   const getCartQuery =
     "SELECT food_id, quantity FROM purrpooddb.Carts WHERE cart_id = ?";
@@ -190,9 +190,9 @@ const deleteCartService = async (cart_id) => {
 };
 
 module.exports = {
-  createCartsService,
-  updateCartsQuantityService,
-  getCartsWithPetFoodService,
-  getUsersWithCartsAndPetFoodService,
-  deleteCartService,
+  createCarts,
+  updateCartsQuantity,
+  getCartsWithPetFood,
+  getUsersWithCartsAndPetFood,
+  deleteCart,
 };

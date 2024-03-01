@@ -2,7 +2,7 @@ const db = require('../db/db.js')
 const fs = require('fs-extra');
 const path = require('path');
 
-const createPetfoodService = async (food_name, food_description, category, price, stock_quantity) => {
+const createPetfood = async (food_name, food_description, category, price, stock_quantity) => {
   
   //make sure it fields are not empty
   if (!food_name || !food_description || !category || !price || !stock_quantity) {
@@ -17,15 +17,31 @@ const values = [food_name, food_description, category, price, stock_quantity];
             "INSERT INTO purrpooddb.PetFood (food_name, food_description, category, price, stock_quantity) VALUES (?, ?, ?, ?, ?)",
             values
           );
-        console.log("petfood service: ", results)
-        const petfoodId = results.insertId;
-        return petfoodId;
+        console.log("petfood : ", results)
+
+    // Fetch the inserted row to get the food_id
+    const [fetchResult] = await db.promise().query(
+      "SELECT * FROM purrpooddb.PetFood WHERE food_id = ?",
+      [results.insertId]
+    );
+
+    if (fetchResult.length === 0) {
+      throw new Error("Failed to fetch the created petfood");
+    }
+
+    const createdPetfood = fetchResult[0];
+
+    return {
+      insertId: createdPetfood.food_id,
+      affectedRows: results.affectedRows,
+    };
+
       } catch (error) {
         throw error;
       }
 }
 
-const updatePetFoodService = async (updatedFood, foodId) => {
+const updatePetFood = async (updatedFood, foodId) => {
   const update = "UPDATE purrpooddb.PetFood SET ? WHERE food_id = ?";
   const values = [updatedFood, foodId]
   try {
@@ -43,7 +59,7 @@ const updatePetFoodService = async (updatedFood, foodId) => {
   }
 }
 
-const getPetFoodByIdService = async (foodId) => {
+const getPetFoodById = async (foodId) => {
   const getId = "SELECT * FROM purrpooddb.PetFood WHERE food_id = ?"
   const value = [foodId]
   try{
@@ -61,7 +77,7 @@ const getPetFoodByIdService = async (foodId) => {
   }
 }
 
-const getAllPetFoodService = async () => {
+const getAllPetFood = async () => {
   try{
     const [results] = await db.promise().query("SELECT * FROM purrpooddb.PetFood");
 
@@ -71,10 +87,10 @@ const getAllPetFoodService = async () => {
   }
 }
 
-const deletePetFoodService = async (foodId) => {
+const deletePetFood = async (foodId) => {
   try {
     // Get the image URL before deleting the pet food
-    const imageUrl = await getFoodImageByIdService(foodId);
+    const imageUrl = await getFoodImageById(foodId);
 
     // Delete the pet food
     const deleteQuery = "DELETE FROM purrpooddb.PetFood WHERE food_id = ?";
@@ -101,10 +117,10 @@ const deletePetFoodService = async (foodId) => {
   }
 };
 
-//Food Image Service here ->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//Food Image  here ->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-const uploadPetFoodImageService = async (file, foodId) =>{
+const uploadPetFoodImage = async (file, foodId) =>{
   const foodImageUrl = file;
 
   const sql = 'UPDATE purrpooddb.PetFood SET food_image = ? WHERE food_id = ?';
@@ -119,7 +135,7 @@ const uploadPetFoodImageService = async (file, foodId) =>{
   }
 }
 
-const getFoodImageByIdService = async (foodId) => {
+const getFoodImageById = async (foodId) => {
   try {
     const [result] = await db
       .promise()
@@ -137,11 +153,11 @@ const getFoodImageByIdService = async (foodId) => {
 
 
 module.exports = {
-    createPetfoodService,
-    updatePetFoodService,
-    getAllPetFoodService,
-    getPetFoodByIdService,
-    uploadPetFoodImageService,
-    getFoodImageByIdService,
-    deletePetFoodService
+    createPetfood,
+    updatePetFood,
+    getAllPetFood,
+    getPetFoodById,
+    uploadPetFoodImage,
+    getFoodImageById,
+    deletePetFood
 }

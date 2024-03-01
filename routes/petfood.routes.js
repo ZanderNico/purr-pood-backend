@@ -9,34 +9,35 @@ const verifyToken = require("../middlewares/auth");
 router.post(
   "/create-petfood", verifyToken,
   checkAdminRole,
-  petFoodController.createPetfoodController
+  petFoodController.createPetfood
 );
 
 //get petfoods
-router.get("/", petFoodController.getAllPetFoodController);
+router.get("/", petFoodController.getAllPetFood);
 
 //upload food image
 router.put(
   "/upload-image/:food_id",
   upload.single("food_image"),
+  verifyToken,
   checkAdminRole,
-  petFoodController.uploadPetFoodImageController
+  petFoodController.uploadPetFoodImage
 );
 
 //update pet food
-router.put("/:food_id", checkAdminRole, petFoodController.updatePetFoodController);
+router.put("/:food_id", checkAdminRole, petFoodController.updatePetFood);
 
 //delete pet food
 router.delete(
   "/delete/:food_id",
   checkAdminRole,
-  petFoodController.deletePetfoodController
+  petFoodController.deletePetfood
 );
 
 //get image only
-router.get("/get-image/:food_id", petFoodController.getFoodImageByIdController);
+router.get("/get-image/:food_id", petFoodController.getFoodImageById);
 
 //get data by Id
-router.get("/:food_id", petFoodController.getPetFoodByIdController);
+router.get("/:food_id", petFoodController.getPetFoodById);
 
 module.exports = router;

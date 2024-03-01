@@ -5,14 +5,14 @@ const verifyToken = require("../middlewares/auth");
 const checkAdminRole = require("../middlewares/adminRole");
 
 //add cart
-router.post("/addToCart", verifyToken, cartsController.createCartsController);
+router.post("/addToCart", verifyToken, cartsController.createCarts);
 
 //get carts
 router.get(
   "/carts-petfood",
   verifyToken,
   checkAdminRole,
-  cartsController.getCartWithPetFoodController
+  cartsController.getCartWithPetFood
 );
 
 //get carts withg users
@@ -20,17 +20,17 @@ router.get(
   "/users-carts",
   verifyToken,
   checkAdminRole,
-  cartsController.getUsersWithCartsAndPetFoodController
+  cartsController.getUsersWithCartsAndPetFood
 );
 
 //update quantity of the cart
 router.put(
   "/:cart_id",
   verifyToken,
-  cartsController.updateCartsQuantityController
+  cartsController.updateCartsQuantity
 );
 
 //delete cart
-router.delete("/:cart_id", verifyToken, cartsController.deleteCartController);
+router.delete("/:cart_id", verifyToken, cartsController.deleteCart);
 
 module.exports = router;

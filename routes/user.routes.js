@@ -5,21 +5,21 @@ const verifyToken = require('../middlewares/auth');
 const checkAdminRole = require('../middlewares/adminRole');
 
 // Create user (POST)
-router.post('/create-users', userController.createUserController);
+router.post('/create-users', userController.createUser);
 
 //Get all users 
-router.get('/', verifyToken, checkAdminRole, userController.getAllUsersController)
+router.get('/', verifyToken, checkAdminRole, userController.getAllUsers)
 
 //login
-router.post('/login', userController.loginUserController)
+router.post('/login', userController.loginUser)
 
 //get user by id 
-router.get('/:user_id', verifyToken, userController.getUserByIdController)
+router.get('/:user_id', verifyToken, userController.getUserById)
 
 //update user by id
-router.put('/update-users/:user_id', verifyToken, userController.updateUserController)
+router.put('/update-users/:user_id', verifyToken, userController.updateUser)
 
 //delete user by id
-router.delete('/delete-users/:user_id', verifyToken, checkAdminRole, userController.deleteUserController)
+router.delete('/delete-users/:user_id', verifyToken, checkAdminRole, userController.deleteUser)
 
 module.exports = router;
