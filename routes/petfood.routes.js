@@ -25,11 +25,11 @@ router.put(
 );
 
 //update pet food
-router.put("/:food_id", checkAdminRole, petFoodController.updatePetFood);
+router.put("/:food_id", verifyToken, checkAdminRole, petFoodController.updatePetFood);
 
 //delete pet food
 router.delete(
-  "/delete/:food_id",
+  "/delete/:food_id", verifyToken,
   checkAdminRole,
   petFoodController.deletePetfood
 );
