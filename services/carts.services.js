@@ -160,6 +160,63 @@ const getUsersWithCartsAndPetFood = async () => {
   }
 };
 
+const getCartWithUserById = async (user_id) => {
+  const query = "SELECT Users.user_id, Users.user_name, Users.email, Users.user_role, Carts.cart_id, Carts.quantity, Petfood.food_id, Petfood.food_name, Petfood.food_description, Petfood.category, Petfood.price, Petfood.stock_quantity, Petfood.food_image " + 
+                "FROM purrpooddb.Users " +
+                "LEFT JOIN purrpooddb.Carts ON Users.user_id = Carts.customer_id " +
+                "LEFT JOIN purrpooddb.Petfood ON Carts.food_id = Petfood.food_id " +
+                "WHERE Users.user_id = ?";
+  try {
+    const [results] = await db.promise().query(query, [user_id]);
+    const userWithCarts = {
+      user_id,
+      user_name: null,
+      email: null,
+      user_role: null,
+      carts: [],
+    };
+
+    results.forEach((row) => {
+      const {
+        user_id,
+        user_name,
+        email,
+        user_role,
+        cart_id,
+        quantity,
+        food_id,
+        food_name,
+        food_description,
+        category,
+        price,
+        stock_quantity,
+        food_image,
+      } = row;
+
+      userWithCarts.user_id = user_id;
+      userWithCarts.user_name = user_name;
+      userWithCarts.email = email;
+      userWithCarts.user_role = user_role;
+
+      userWithCarts.carts.push({
+        cart_id,
+        food_id,
+        food_name,
+        food_description,
+        category,
+        quantity,
+        price,
+        stock_quantity,
+        food_image,
+      });
+    });
+
+    return userWithCarts;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const deleteCart = async (cart_id) => {
   // Get the cart information before deletion
   const getCartQuery =
@@ -195,4 +252,5 @@ module.exports = {
   getCartsWithPetFood,
   getUsersWithCartsAndPetFood,
   deleteCart,
+  getCartWithUserById
 };

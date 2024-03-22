@@ -30,6 +30,8 @@ router.put(
   cartsController.updateCartsQuantity
 );
 
+router.get("/users-carts/:id", verifyToken, cartsController.getUserByIdWithCarts)
+
 //delete cart
 router.delete("/:cart_id", verifyToken, cartsController.deleteCart);
 

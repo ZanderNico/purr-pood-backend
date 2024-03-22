@@ -50,6 +50,23 @@ const getUsersWithCartsAndPetFood = async (req, res) => {
   }
 };
 
+const getUserByIdWithCarts = async (req, res, next) => {
+  const userId = req.params.id;
+
+  try {
+    const userWithCarts = await cartsService.getCartWithUserById(userId)
+    
+    if (!userWithCarts || !userWithCarts.user_id) {
+      return res.status(404).json({ message: 'User not found or has no carts' });
+    }
+
+    res.json(userWithCarts);
+  } catch (error) {
+    console.error('Error retrieving user with carts:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 const deleteCart = async (req, res) => {
   const { cart_id } = req.params;
 
@@ -67,5 +84,6 @@ module.exports = {
   updateCartsQuantity,
   getCartWithPetFood,
   getUsersWithCartsAndPetFood,
-  deleteCart
+  deleteCart,
+  getUserByIdWithCarts
 };
