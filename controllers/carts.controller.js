@@ -17,6 +17,8 @@ const createCarts = async (req, res) => {
   }
 };
 
+
+
 const updateCartsQuantity = async (req, res) => {
   const { quantity } = req.body; 
   const { cart_id } = req.params;
